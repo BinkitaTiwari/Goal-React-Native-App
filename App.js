@@ -26,6 +26,7 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import GoalItem from './Components/GoalItem';
 
 export default class App extends Component {
   state={
@@ -62,9 +63,7 @@ export default class App extends Component {
           <ScrollView>
           {this.state.courseGoal.map((Goal)=>{
             return(
-              <View style={styles.listItem}>
-              <Text>{Goal}</Text>
-              </View>
+              <GoalItem Goal={Goal}/>
 
             )
           
@@ -93,15 +92,8 @@ const styles = StyleSheet.create({
     borderWidth: 2, 
     borderColor: 'black',
     padding: 10
-  },
-  listItem:{
-    padding: 10,
-    marginVertical: 20,
-    backgroundColor:'#ccc',
-    borderColor: 'black',
-    borderBottomWidth: 2,
-    justifyContent: 'center'
   }
+  
 });
 
 
