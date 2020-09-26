@@ -11,7 +11,7 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  FlatList
+  FlatList, Button
 } from 'react-native';
 
 import {
@@ -28,25 +28,48 @@ import GoalItem from './Components/GoalItem';
 export default class App extends Component {
   state={
   
-    courseGoal: [ ]
+    courseGoal: [ ],
+    modalVisible: false
+   
   }
 
-  
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  }
 
  goalAddHandler=(goalTitle)=>{
    //console.log(this.state.goal);
    this.setState({courseGoal:[...this.state.courseGoal,
-    {id: Math.random().toString(), value: goalTitle}]})
+    {id: Math.random().toString(), value: goalTitle}]});
+
+    this.setState({modalVisible: false})
+
+    
  }
 
  goalRemoveHandler=(goalId)=>{
   this.setState({courseGoal: [...this.state.courseGoal.filter(goal => goal.id !== goalId)]})
  }
+
+ cancelHandler=()=>{
+  this.setState({modalVisible: false})
+ }
   render() {
     
     return (
       <View style={styles.screen}> 
-        <GoalInput addGoals={this.goalAddHandler}/>
+      <View >
+      <Button title="Click to Add Goals" onPress={() => {
+            this.setModalVisible(!this.state.modalVisible);
+          }}/>
+      </View>
+      
+        <GoalInput 
+        visible={this.state.modalVisible} 
+        addGoals={this.goalAddHandler}
+        cancelGoals={this.cancelHandler}
+        />
+
         <View>
           <FlatList 
           keyExtractor= {(item,index)=> item.id}
@@ -72,6 +95,7 @@ const styles = StyleSheet.create({
     padding: 30
     
   }
+  
   
 });
 
