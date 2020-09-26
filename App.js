@@ -10,13 +10,8 @@ import React, { Component } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
-  Text,
-  StatusBar,
-  TouchableOpacity,
-  Alert,
-  TextInput, Button
+  FlatList
 } from 'react-native';
 
 import {
@@ -26,49 +21,44 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import GoalInput from './Components/GoalInput';
 import GoalItem from './Components/GoalItem';
+
 
 export default class App extends Component {
   state={
-    goal: ' ',
+  
     courseGoal: [ ]
   }
 
- inputHandler=(enteredText)=>{
-   this.setState({goal:enteredText})
- } 
+  
 
- goalAddHandler=()=>{
-   console.log(this.state.goal);
-   this.setState({courseGoal:[...this.state.courseGoal,this.state.goal]})
+ goalAddHandler=(goalTitle)=>{
+   //console.log(this.state.goal);
+   this.setState({courseGoal:[...this.state.courseGoal,
+    {id: Math.random().toString(), value: goalTitle}]})
+ }
+
+ goalRemoveHandler=(goalId)=>{
+  this.setState({courseGoal: [...this.state.courseGoal.filter(goal => goal.id !== goalId)]})
  }
   render() {
     
     return (
       <View style={styles.screen}> 
-        <View style={styles.container1}>
-        <TextInput 
-        
-        placeholder="Enter your goals" 
-        style={styles.input}
-        //onChangeText={(text)=> {this.setState({goal:text})}}
-        onChangeText={this.inputHandler}
-        value={this.state.goal}/>
-        
-        
-        <Button title="ADD" onPress={this.goalAddHandler}/>
-        
-        </View>
+        <GoalInput addGoals={this.goalAddHandler}/>
         <View>
-          <ScrollView>
-          {this.state.courseGoal.map((Goal)=>{
-            return(
-              <GoalItem Goal={Goal}/>
+          <FlatList 
+          keyExtractor= {(item,index)=> item.id}
+          data={this.state.courseGoal} 
+          renderItem={itemData=> (
+             <GoalItem 
+             id={itemData.item.id} 
+             Delete={this.goalRemoveHandler} 
+             goals={itemData.item.value}/>
 
-            )
-          
-          })}
-          </ScrollView>
+          ) }/>
+         
           
         </View>
 
@@ -81,17 +71,6 @@ const styles = StyleSheet.create({
   screen:{
     padding: 30
     
-  },
-  container1:{
-    flexDirection:'row',
-    justifyContent:"space-between",
-    alignItems:'center'
-  },
-  input:{
-    width: 250, 
-    borderWidth: 2, 
-    borderColor: 'black',
-    padding: 10
   }
   
 });
